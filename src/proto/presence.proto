@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package im;
+
+import "common.proto";
+
+service PresenceService {
+    rpc SetOnlineStatus(SetOnlineStatusRequest) returns (SetOnlineStatusResponse);
+    rpc GetOnlineStatus(GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
+    rpc BatchGetOnlineStatus(BatchGetOnlineStatusRequest) returns (BatchGetOnlineStatusResponse);
+    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+    rpc GetRecentContacts(GetRecentContactsRequest) returns (GetRecentContactsResponse);
+}
+
+message SetOnlineStatusRequest {
+    int64 user_id = 1;
+    string device_id = 2;
+    string device_type = 3;
+    string gateway_id = 4;
+}
+
+message SetOnlineStatusResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message GetOnlineStatusRequest {
+    int64 user_id = 1;
+}
+
+message GetOnlineStatusResponse {
+    bool success = 1;
+    Error error = 2;
+    bool online = 3;
+    string device_type = 4;
+    string gateway_id = 5;
+    int64 last_active = 6;
+}
+
+message BatchGetOnlineStatusRequest {
+    repeated int64 user_ids = 1;
+}
+
+message BatchGetOnlineStatusResponse {
+    bool success = 1;
+    Error error = 2;
+    map<int64, UserPresence> status_map = 3;
+}
+
+message HeartbeatRequest {
+    int64 user_id = 1;
+    string device_id = 2;
+}
+
+message HeartbeatResponse {
+    bool success = 1;
+    int64 server_time = 2;
+}
+
+message GetRecentContactsRequest {
+    int64 user_id = 1;
+    int32 limit = 2;
+}
+
+message GetRecentContactsResponse {
+    bool success = 1;
+    Error error = 2;
+    repeated ContactInfo contacts = 3;
+}
+
+message UserPresence {
+    int64 user_id = 1;
+    bool online = 2;
+    string device_type = 3;
+    string gateway_id = 4;
+    int64 last_active = 5;
+    repeated string devices = 6;
+}
+
+message ContactInfo {
+    int64 user_id = 1;
+    string nickname = 2;
+    string avatar = 3;
+    OnlineStatus status = 4;
+    int64 last_message_time = 5;
+}

@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package im;
+
+import "common.proto";
+
+service MessageService {
+    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+    rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+    rpc MarkMessageRead(MarkMessageReadRequest) returns (MarkMessageReadResponse);
+    rpc SyncMessages(SyncMessagesRequest) returns (stream Message);
+    rpc GetOfflineMessages(GetOfflineMessagesRequest) returns (GetOfflineMessagesResponse);
+}
+
+message SendMessageRequest {
+    int64 sender_id = 1;
+    int64 receiver_id = 2;
+    MessageType message_type = 3;
+    string content = 4;
+    int64 client_message_id = 5;
+}
+
+message SendMessageResponse {
+    bool success = 1;
+    Error error = 2;
+    int64 server_message_id = 3;
+    int64 timestamp = 4;
+}
+
+message GetMessagesRequest {
+    int64 user_id = 1;
+    int64 peer_id = 2;
+    int64 start_time = 3;
+    int32 limit = 4;
+}
+
+message GetMessagesResponse {
+    bool success = 1;
+    Error error = 2;
+    repeated Message messages = 3;
+}
+
+message MarkMessageReadRequest {
+    int64 user_id = 1;
+    int64 peer_id = 2;
+    int64 last_read_message_id = 3;
+}
+
+message MarkMessageReadResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message SyncMessagesRequest {
+    int64 user_id = 1;
+    int64 last_sync_time = 2;
+    int32 limit = 3;
+}
+
+message GetOfflineMessagesRequest {
+    int64 user_id = 1;
+    int64 last_message_id = 2;
+    int32 limit = 3;
+}
+
+message GetOfflineMessagesResponse {
+    bool success = 1;
+    Error error = 2;
+    repeated Message messages = 3;
+}
+
+message Message {
+    int64 id = 1;
+    int64 conversation_id = 2;
+    int64 sender_id = 3;
+    int64 receiver_id = 4;
+    MessageType message_type = 5;
+    string content = 6;
+    int64 timestamp = 7;
+    int32 status = 8;
+}

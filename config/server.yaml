@@ -1,0 +1,66 @@
+# OurChat Server Configuration
+# 百万级并发即时通讯系统
+
+# MySQL Configuration
+mysql:
+  host: "mysql"
+  port: 3306
+  username: "ourchat"
+  password: "ourchat_password"
+  database: "ourchat_db"
+  pool_size: 20
+  max_pool_size: 50
+  connection_timeout: 10
+  idle_timeout: 300
+
+# Redis Configuration
+redis:
+  host: "redis"
+  port: 6379
+  password: ""
+  db: 0
+  pool_size: 20
+  command_timeout: 5
+
+# Kafka Configuration (可选)
+kafka:
+  brokers:
+    - "kafka:9092"
+  port: 9092
+  client_id: "ourchat_server"
+  batch_size: 16384
+  linger_ms: 5
+  compression: 1  # 0: none, 1: gzip, 2: snappy
+  acks: -1  # -1: all, 0: none, 1: leader
+  retries: 3
+
+# Server Configuration
+server:
+  service_name: "ourchat_server"
+  host: "0.0.0.0"
+  port: 50051
+  worker_threads: 8
+  max_connection: 10000
+  keepalive_time: 30
+  keepalive_timeout: 10
+
+# JWT Configuration
+jwt:
+  secret: "your_super_secret_jwt_key_here_change_in_production"
+  expire_seconds: 86400  # 24 hours
+  refresh_expire_seconds: 604800  # 7 days
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARN, ERROR
+  console_output: true
+  file_output: true
+  log_file: "logs/ourchat.log"
+
+# WebSocket Configuration (可选，用于长连接)
+websocket:
+  enabled: true
+  port: 8080
+  max_connections: 10000
+  heartbeat_interval: 30
+  heartbeat_timeout: 90

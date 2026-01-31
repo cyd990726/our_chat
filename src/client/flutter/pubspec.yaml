@@ -1,0 +1,103 @@
+name: ourchat_flutter
+description: OurChat Flutter Client - Web Platform Instant Messaging Application
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management - Riverpod
+  flutter_riverpod: ^2.4.0
+  riverpod_annotation: ^2.3.0
+
+  # Shared Preferences
+  shared_preferences: ^2.2.2
+
+  # Go Router for Navigation
+  go_router: ^12.1.3
+
+  # gRPC for Flutter
+  grpc: ^3.2.4
+  protobuf: ^3.1.0
+
+  # WebSocket
+  web_socket_channel: ^2.4.0
+
+  # SQLite Database - Drift
+  drift: ^2.13.0
+  sqlite3_flutter_libs: ^0.5.18
+  path_provider: ^2.1.1
+  path: ^1.8.3
+
+  # Secure Storage
+  flutter_secure_storage: ^9.0.0
+
+  # JWT Token Handling
+  jwt_decode: ^0.3.1
+
+  # Date/Time
+  intl: ^0.18.1
+
+  # UUID
+  uuid: ^4.2.1
+
+  # Logger
+  logger: ^2.0.2
+
+  # Async
+  rxdart: ^0.27.7
+
+  # Image Loading
+  cached_network_image: ^3.3.0
+
+  # Markdown Rendering (for message content)
+  flutter_markdown: ^0.6.18
+
+  # URL Launcher
+  url_launcher: ^6.2.1
+
+  # File Picker
+  file_picker: ^8.0.0
+
+  # Permission Handler
+  permission_handler: ^11.1.0
+
+  # Loading Overlay
+  loading_overlay: ^0.3.0
+
+  # Toast Messages
+  fluttertoast: ^8.2.2
+
+  # Connectivity Check
+  connectivity_plus: ^5.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+  # Code Generation
+  build_runner: ^2.4.6
+  riverpod_generator: ^2.3.0
+  drift_dev: ^2.13.0
+
+  # Mocking
+  mockito: ^5.4.2
+
+  # Integration Tests
+  integration_test:
+    sdk: flutter

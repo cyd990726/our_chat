@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package im;
+
+import "common.proto";
+
+service GroupService {
+    rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
+    rpc DeleteGroup(DeleteGroupRequest) returns (DeleteGroupResponse);
+    rpc UpdateGroupInfo(UpdateGroupInfoRequest) returns (UpdateGroupInfoResponse);
+    rpc GetGroupInfo(GetGroupInfoRequest) returns (GetGroupInfoResponse);
+    rpc AddGroupMember(AddGroupMemberRequest) returns (AddGroupMemberResponse);
+    rpc RemoveGroupMember(RemoveGroupMemberRequest) returns (RemoveGroupMemberResponse);
+    rpc GetGroupMembers(GetGroupMembersRequest) returns (GetGroupMembersResponse);
+    rpc SendGroupMessage(SendGroupMessageRequest) returns (SendGroupMessageResponse);
+    rpc GetGroupMessages(GetGroupMessagesRequest) returns (GetGroupMessagesResponse);
+    rpc QuitGroup(QuitGroupRequest) returns (QuitGroupResponse);
+}
+
+message CreateGroupRequest {
+    int64 owner_id = 1;
+    string group_name = 2;
+    string group_avatar = 3;
+    repeated int64 member_ids = 4;
+    string description = 5;
+}
+
+message CreateGroupResponse {
+    bool success = 1;
+    Error error = 2;
+    int64 group_id = 3;
+}
+
+message DeleteGroupRequest {
+    int64 group_id = 1;
+    int64 operator_id = 2;
+}
+
+message DeleteGroupResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message UpdateGroupInfoRequest {
+    int64 group_id = 1;
+    int64 operator_id = 2;
+    string group_name = 3;
+    string group_avatar = 4;
+    string description = 5;
+}
+
+message UpdateGroupInfoResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message GetGroupInfoRequest {
+    int64 group_id = 1;
+}
+
+message GetGroupInfoResponse {
+    bool success = 1;
+    Error error = 2;
+    GroupInfo group = 3;
+}
+
+message AddGroupMemberRequest {
+    int64 group_id = 1;
+    int64 operator_id = 2;
+    repeated int64 member_ids = 3;
+}
+
+message AddGroupMemberResponse {
+    bool success = 1;
+    Error error = 2;
+    repeated int64 added_member_ids = 3;
+}
+
+message RemoveGroupMemberRequest {
+    int64 group_id = 1;
+    int64 operator_id = 2;
+    int64 member_id = 3;
+}
+
+message RemoveGroupMemberResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message GetGroupMembersRequest {
+    int64 group_id = 1;
+    int32 limit = 2;
+    int64 offset = 3;
+}
+
+message GetGroupMembersResponse {
+    bool success = 1;
+    Error error = 2;
+    repeated GroupMember members = 3;
+    int32 total_count = 4;
+}
+
+message SendGroupMessageRequest {
+    int64 group_id = 1;
+    int64 sender_id = 2;
+    MessageType message_type = 3;
+    string content = 4;
+    int64 client_message_id = 5;
+}
+
+message SendGroupMessageResponse {
+    bool success = 1;
+    Error error = 2;
+    int64 server_message_id = 3;
+    int64 timestamp = 4;
+}
+
+message GetGroupMessagesRequest {
+    int64 group_id = 1;
+    int64 start_seq = 2;
+    int32 limit = 3;
+}
+
+message GetGroupMessagesResponse {
+    bool success = 1;
+    Error error = 2;
+    repeated GroupMessage messages = 3;
+}
+
+message QuitGroupRequest {
+    int64 group_id = 1;
+    int64 user_id = 2;
+}
+
+message QuitGroupResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message GroupInfo {
+    int64 id = 1;
+    string group_name = 2;
+    string group_avatar = 3;
+    int64 owner_id = 4;
+    int32 member_count = 5;
+    string description = 6;
+    int64 create_time = 7;
+}
+
+message GroupMember {
+    int64 user_id = 1;
+    string nickname = 2;
+    string avatar = 3;
+    MemberRole role = 4;
+    string alias = 5;
+    int64 join_time = 6;
+}
+
+message GroupMessage {
+    int64 id = 1;
+    int64 group_id = 2;
+    int64 sender_id = 3;
+    MessageType message_type = 4;
+    string content = 5;
+    int64 seq_id = 6;
+    int64 timestamp = 7;
+}
