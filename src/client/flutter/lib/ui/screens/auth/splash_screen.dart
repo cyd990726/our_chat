@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ourchat_flutter/core/auth/auth_manager.dart';
 import 'package:ourchat_flutter/ui/navigation/route_names.dart';
 
 class SplashScreen extends ConsumerWidget {
@@ -8,8 +9,20 @@ class SplashScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future.delayed(const Duration(seconds: 2), () {
-      context.go(RouteNames.login);
+    final authManager = ref.read(authManagerProvider);
+
+    Future.delayed(const Duration(seconds: 2), () async {
+      final token = await authManager.getAccessToken();
+      final isLoggedIn =
+          token != null && token.isNotEmpty && authManager.isTokenValid(token);
+
+      if (context.mounted) {
+        if (isLoggedIn) {
+          context.go(RouteNames.chatList);
+        } else {
+          context.go(RouteNames.login);
+        }
+      }
     });
 
     return Scaffold(

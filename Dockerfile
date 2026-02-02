@@ -1,7 +1,5 @@
 FROM gcc:12 as builder
 
-WORKDIR /app
-
 RUN apt-get update && apt-get install -y \
     cmake \
     build-essential \
@@ -28,18 +26,19 @@ RUN \
     echo '#!/bin/sh' > /usr/bin/protoc-gen-grpc && \
     chmod +x /usr/bin/grpc_*_plugin /usr/bin/protoc-gen-grpc
 
+WORKDIR /app
+
 COPY . .
 
-RUN mkdir build && cd build && \
+RUN rm -rf build && mkdir build && cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTS=OFF \
           .. && \
     make -j$(nproc) && \
-    mkdir -p /app/bin
+    mkdir -p /app/bin && \
+    cp src/server/ourchat_server /app/bin/
 
-RUN find /app -name "ourchat_server" -type f -executable 2>/dev/null | head -1 | xargs -I {} cp {} /app/bin/ourchat_server 2>/dev/null || cp /app/build/src/server/ourchat_server /app/bin/ourchat_server
-
-FROM ubuntu:22.04
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     libssl-dev \
@@ -48,7 +47,10 @@ RUN apt-get update && apt-get install -y \
     libyaml-cpp-dev \
     libprotobuf-dev \
     libgrpc++-dev \
-    && rm -rf /var/lib/apt/lists/*
+    libgrpc-dev \
+    libabsl-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && ldconfig
 
 WORKDIR /app
 
@@ -62,4 +64,4 @@ EXPOSE 50051 8080
 
 ENV CONFIG_PATH=/app/config/server.yaml
 
-CMD ["ourchat_server", "/app/config/server.yaml"]
+CMD ["/usr/local/bin/ourchat_server", "/app/config/server.yaml"]

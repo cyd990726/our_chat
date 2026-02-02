@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:grpc/grpc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppConfig {
@@ -33,9 +34,54 @@ class AppConfig {
     _prefs = await SharedPreferences.getInstance();
   }
 
+  String getGrpcAddress() {
+    final isSecure = grpcPort == 443;
+    return '${isSecure ? 'https' : 'http'}://$grpcHost:$grpcPort';
+  }
+
   static final appConfigProvider = FutureProvider<AppConfig>((ref) async {
     final config = AppConfig.getInstance();
     await config.initialize();
     return config;
   });
 }
+
+class GrpcConfig {
+  static const int defaultAuthPort = 50001;
+  static const int defaultMessagePort = 50004;
+  static const int defaultGroupPort = 50005;
+  static const int defaultSessionPort = 50002;
+  static const int defaultPresencePort = 50006;
+
+  static String getAuthHost() {
+    final config = AppConfig.getInstance();
+    return config.grpcHost;
+  }
+
+  static int getAuthPort() {
+    final config = AppConfig.getInstance();
+    return config.grpcPort;
+  }
+
+  static ChannelCredentials getChannelCredentials() {
+    final port = getAuthPort();
+    if (port == 443) {
+      return ChannelCredentials.secure();
+    }
+    return ChannelCredentials.insecure();
+  }
+
+  static Duration getConnectionTimeout() {
+    return const Duration(seconds: 10);
+  }
+
+  static Duration getIdleTimeout() {
+    return const Duration(minutes: 5);
+  }
+}
+
+final appConfigProvider = FutureProvider<AppConfig>((ref) async {
+  final config = AppConfig.getInstance();
+  await config.initialize();
+  return config;
+});
